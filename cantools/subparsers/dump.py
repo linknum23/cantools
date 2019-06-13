@@ -123,7 +123,26 @@ def _do_dump(args):
                                strict=not args.no_strict)
 
     if isinstance(dbase, CanDatabase):
-        _dump_can_database(dbase)
+        if args.id != -1:
+            if args.id >= 0:
+                msg = dbase.get_message_by_frame_id(args.id)
+                if msg:
+                    _dump_can_message(msg)
+                else:
+                    print("No message found")
+            else:
+                print("Negative CAN ids are not supported.")
+        elif args.name != '':
+            try:
+                msg = dbase.get_message_by_name(args.name)
+                if msg:
+                    _dump_can_message(msg)
+                else:
+                    print("No message found")
+            except KeyError:
+                print("No message found")
+        else:
+            _dump_can_database(dbase)
     elif isinstance(dbase, DiagnosticsDatabase):
         _dump_diagnostics_database(dbase)
     else:
@@ -141,6 +160,16 @@ def add_subparser(subparsers):
         '--no-strict',
         action='store_true',
         help='Skip database consistency checks.')
+    dump_parser.add_argument(
+        '-i', '--id',
+        type=lambda x: int(x, 0),
+        default=-1,
+        help='Message ID, ie. 0x53 or 83.')
+    dump_parser.add_argument(
+        '-n', '--name',
+        type=str,
+        default='',
+        help='Message name.')
     dump_parser.add_argument(
         'database',
         help='Database file.')
