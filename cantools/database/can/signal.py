@@ -1,5 +1,6 @@
 # A CAN signal.
 
+
 class Decimal(object):
     """Holds the same values as
     :attr:`~cantools.database.can.Signal.scale`,
@@ -387,6 +388,21 @@ class Signal(object):
         for choice_number, choice_string in self.choices.items():
             if choice_string == string:
                 return choice_number
+
+    def scale_and_range(self):
+        scale = ' x ' + str(self._scale) if self._scale != 1 else ''
+        offset = ' + ' + \
+                 str(self._offset) if self._offset != 0 else ''
+        units = ' (' + self._unit + ')' if self._unit is not None else ''
+        bits = ' (' + str(self._length) + ' bits)'
+
+        if (self._minimum is not None) and (self._maximum is not None):
+            range = '[' + str(self._minimum) + ', ' + \
+                    str(self._maximum) + ']'
+        else:
+            range = ''
+
+        return range + scale + offset + units + bits
 
     def __repr__(self):
 

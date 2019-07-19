@@ -42,6 +42,7 @@ def _dump_print_message_separator():
 def _dump_can_message(message):
     cycle_time = message.cycle_time
     signal_choices_string = message.signal_choices_string()
+    signal_info_string = message.signal_info_string()
 
     if cycle_time is None:
         cycle_time = '-'
@@ -73,14 +74,13 @@ def _dump_can_message(message):
         for line in message.signal_tree_string().splitlines()
     ]))
 
-    if signal_choices_string:
+    if signal_info_string:
         print()
-        print('  Signal choices:')
+        print('  Signal info:')
         print('\n'.join([
             ('    ' + line).rstrip()
-            for line in signal_choices_string.splitlines()
+            for line in signal_info_string.splitlines()
         ]))
-
     _dump_print_message_separator()
 
 

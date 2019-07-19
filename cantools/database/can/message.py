@@ -71,7 +71,7 @@ class Message(object):
                 continue
 
             if ((multiplexer_id is not None)
-                and (multiplexer_id not in signal.multiplexer_ids)):
+                    and (multiplexer_id not in signal.multiplexer_ids)):
                 continue
 
             if signal.is_multiplexer:
@@ -341,6 +341,26 @@ class Message(object):
 
         return '\n'.join(lines)
 
+    def signal_info_string(self):
+        """Returns the signal info as a string.
+        TODO: make this return offsets/ranges/scaling info
+        """
+
+        lines = []
+
+        for signal in self._signals:
+            if signal.choices:
+                lines.append('')
+                lines.append(signal.name + ': ' + signal.scale_and_range())
+
+                for value, text in sorted(signal.choices.items()):
+                    lines.append('    {} {}'.format(value, text))
+            else:
+                lines.append('')
+                lines.append(signal.name + ': ' + signal.scale_and_range())
+
+        return '\n'.join(lines)
+
     def layout_string(self, signal_names=True):
         """Returns the message layout as an ASCII art string. Each signal is
         an arrow from LSB ``x`` to MSB ``<``. Overlapping signal bits
@@ -425,7 +445,8 @@ class Message(object):
                 if length % 24 != 0:
                     length += (24 - (length % 24))
 
-                signals = [signal + (length - len(signal)) * ' ' for signal in signals]
+                signals = [signal + (length - len(signal))
+                           * ' ' for signal in signals]
 
             # Signals union line.
             signals_union = ''
