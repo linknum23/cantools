@@ -41,7 +41,7 @@ def _dump_print_message_separator():
 
 def _dump_can_message(message):
     cycle_time = message.cycle_time
-    signal_choices_string = message.signal_choices_string()
+    # signal_choices_string = message.signal_choices_string()
     signal_info_string = message.signal_info_string()
 
     if cycle_time is None:
